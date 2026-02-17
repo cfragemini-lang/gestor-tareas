@@ -163,18 +163,6 @@ function setupEventListeners() {
         applyFilters();
     });
 
-    const btnStandardize = document.getElementById('btn-standardize');
-    if (btnStandardize) {
-        btnStandardize.addEventListener('click', async () => {
-            btnStandardize.disabled = true;
-            btnStandardize.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Limpiando...';
-            await runGlobalStandardization();
-            btnStandardize.disabled = false;
-            btnStandardize.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Limpieza';
-            alert('¡Estandarización global completada con éxito!');
-        });
-    }
-
     themeToggle.addEventListener('click', () => {
         document.body.classList.toggle('light-mode');
         const icon = themeToggle.querySelector('i');
