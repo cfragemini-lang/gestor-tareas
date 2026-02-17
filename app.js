@@ -182,7 +182,15 @@ function populateYearFilter() {
     const years = new Set();
     tasks.forEach(task => {
         if (task.due_date) {
-            const year = new Date(task.due_date).getFullYear();
+            let year;
+            if (task.due_date.includes('-')) {
+                // Format: YYYY-MM-DD
+                year = new Date(task.due_date).getFullYear();
+            } else {
+                // Format: M/D/YYYY or MM/DD/YYYY
+                const parts = task.due_date.split('/');
+                year = parseInt(parts[2]); // Year is the third part
+            }
             years.add(year);
         }
         if (task.created_at && task.created_at.toDate) {
