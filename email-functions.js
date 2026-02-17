@@ -107,6 +107,8 @@ window.sendEmailNotification = async function () {
         user_name: userName ? (userName.textContent || 'Usuario') : 'Usuario'
     };
 
+    console.log('Sending email with params:', templateParams);
+
     // Show loading
     const sendButton = event.target;
     const originalText = sendButton.innerHTML;
@@ -114,17 +116,21 @@ window.sendEmailNotification = async function () {
     sendButton.disabled = true;
 
     try {
-        await emailjs.send(
+        const response = await emailjs.send(
             'service_odbzwza',      // Service ID
             'template_7lkhu18',     // Template ID
             templateParams
         );
 
-        alert(`✅ Email enviado exitosamente a ${emailTo}`);
+        console.log('Email sent successfully:', response);
+        alert(`✅ Email enviado exitosamente a ${emailTo}\n\nRevisa tu bandeja de entrada (puede tardar 1-2 minutos).`);
         closeEmailModal();
+        sendButton.innerHTML = originalText;
+        sendButton.disabled = false;
     } catch (error) {
         console.error('Error sending email:', error);
-        alert('❌ Error al enviar el email. Por favor intenta de nuevo.');
+        console.error('Error details:', error.text || error.message);
+        alert(`❌ Error al enviar el email:\n${error.text || error.message}\n\nVerifica la configuración de EmailJS.`);
         sendButton.innerHTML = originalText;
         sendButton.disabled = false;
     }
