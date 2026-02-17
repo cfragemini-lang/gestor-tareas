@@ -167,13 +167,68 @@ function subscribeToTasks(userId) {
             id: doc.id,
             ...doc.data()
         }));
-        renderTasks(tasks);
+        populateYearFilter();
+        applyFilters();
         updateMetrics(tasks);
         updateCharts(tasks);
         initializeDragAndDrop();
     }, (error) => {
         console.error("Error getting tasks: ", error);
     });
+}
+
+// Populate year filter dynamically
+function populateYearFilter() {
+    const years = new Set();
+    tasks.forEach(task => {
+        if (task.due_date) {
+            const year = new Date(task.due_date).getFullYear();
+            years.add(year);
+        }
+        if (task.created_at && task.created_at.toDate) {
+            const year = task.created_at.toDate().getFullYear();
+            years.add(year);
+        }
+    });
+
+    const sortedYears = Array.from(years).sort((a, b) => b - a);
+    filterYear.innerHTML = '<option value="">Todos los años</option>';
+    sortedYears.forEach(year => {
+        filterYear.innerHTML += `<option value="${year}">${year}</option>`;
+    });
+}
+
+// Apply all filters
+function applyFilters() {
+    let filtered = [...tasks];
+
+    // Search filter
+    if (currentFilters.search) {
+        filtered = filtered.filter(t =>
+            t.title.toLowerCase().includes(currentFilters.search) ||
+            (t.description && t.description.toLowerCase().includes(currentFilters.search))
+        );
+    }
+
+    // Month/Year filter
+    if (currentFilters.month !== '' || currentFilters.year !== '') {
+        filtered = filtered.filter(t => {
+            if (!t.due_date) return false;
+
+            const taskDate = new Date(t.due_date);
+            const monthMatch = currentFilters.month === '' || taskDate.getMonth() === parseInt(currentFilters.month);
+            const yearMatch = currentFilters.year === '' || taskDate.getFullYear() === parseInt(currentFilters.year);
+
+            return monthMatch && yearMatch;
+        });
+    }
+
+    renderTasks(filtered);
+}
+
+function renderFilteredTasks(term) {
+    currentFilters.search = term;
+    applyFilters();
 }
 
 function renderFilteredTasks(term) {
