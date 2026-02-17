@@ -100,7 +100,7 @@ onAuthStateChanged(auth, (user) => {
         setTimeout(() => loginScreen.style.display = 'none', 500);
 
         userInfo.style.display = 'flex';
-        userName.textContent = user.displayName;
+        userName.textContent = toTitleCase(user.displayName);
         userAvatar.src = user.photoURL;
 
         subscribeToTasks(user.uid);
@@ -163,6 +163,18 @@ function setupEventListeners() {
         applyFilters();
     });
 
+    const btnStandardize = document.getElementById('btn-standardize');
+    if (btnStandardize) {
+        btnStandardize.addEventListener('click', async () => {
+            btnStandardize.disabled = true;
+            btnStandardize.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Limpiando...';
+            await runGlobalStandardization();
+            btnStandardize.disabled = false;
+            btnStandardize.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Limpieza';
+            alert('¡Estandarización global completada con éxito!');
+        });
+    }
+
     themeToggle.addEventListener('click', () => {
         document.body.classList.toggle('light-mode');
         const icon = themeToggle.querySelector('i');
@@ -207,9 +219,43 @@ function subscribeToTasks(userId) {
         updateMetrics(tasks);
         updateCharts(tasks);
         initializeDragAndDrop();
+
+        // Run global standardization once if needed (first load)
+        if (!window.hasStandardized) {
+            runGlobalStandardization();
+            window.hasStandardized = true;
+        }
     }, (error) => {
         console.error("Error getting tasks: ", error);
     });
+}
+
+// Global Standardization Routine
+async function runGlobalStandardization() {
+    console.log("Iniciando estandarización global de tareas...");
+    let updateCount = 0;
+
+    for (const task of tasks) {
+        const cleanTitle = toTitleCase(task.title.trim());
+        const cleanDesc = (task.description || "").trim();
+
+        // check if update is needed
+        if (task.title !== cleanTitle || task.description !== cleanDesc) {
+            try {
+                await updateDoc(doc(db, "tasks", task.id), {
+                    title: cleanTitle,
+                    description: cleanDesc
+                });
+                updateCount++;
+            } catch (err) {
+                console.error(`Error estandarizando tarea ${task.id}:`, err);
+            }
+        }
+    }
+
+    if (updateCount > 0) {
+        console.log(`Estandarización completada: ${updateCount} tareas actualizadas.`);
+    }
 }
 
 // Populate year filter dynamically
@@ -666,9 +712,17 @@ async function handleFormSubmit(e) {
         return;
     }
 
+    const title = document.getElementById('input-title').value.trim();
+    const description = document.getElementById('input-desc').value.trim();
+
+    if (!title) {
+        alert("El título de la tarea no puede estar vacío.");
+        return;
+    }
+
     const taskData = {
-        title: toTitleCase(document.getElementById('input-title').value),
-        description: document.getElementById('input-desc').value,
+        title: toTitleCase(title),
+        description: description,
         priority: document.getElementById('input-priority').value,
         status: document.getElementById('input-status').value,
         due_date: document.getElementById('input-date').value,
