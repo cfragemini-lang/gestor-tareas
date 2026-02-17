@@ -31,7 +31,6 @@ window.addTag = function (tagName) {
 
     currentTags.push(tagName);
     renderTagsChips();
-    document.getElementById('input-tags').value = '';
 };
 
 // Remove tag
@@ -60,18 +59,60 @@ function renderTagsChips() {
 
 // Setup tags input listener
 function setupTagsInput() {
-    const tagsInput = document.getElementById('input-tags');
-    if (!tagsInput) return;
+    const dropdown = document.getElementById('tags-dropdown');
+    const customInput = document.getElementById('input-tags-custom');
+    const addButton = document.getElementById('btn-add-tag');
 
-    tagsInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            const tagName = tagsInput.value.trim();
-            if (tagName) {
-                addTag(tagName);
+    if (!dropdown) return;
+
+    // Handle dropdown change
+    dropdown.addEventListener('change', (e) => {
+        const value = e.target.value;
+
+        if (value === 'otro') {
+            // Show custom input
+            if (customInput && addButton) {
+                customInput.style.display = 'block';
+                addButton.style.display = 'block';
+                customInput.focus();
             }
+        } else if (value) {
+            // Add predefined tag
+            addTag(value);
+            dropdown.value = ''; // Reset dropdown
         }
     });
+
+    // Handle custom tag input (Enter key)
+    if (customInput) {
+        customInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const value = customInput.value.trim();
+                if (value) {
+                    addTag(value);
+                    customInput.value = '';
+                    customInput.style.display = 'none';
+                    if (addButton) addButton.style.display = 'none';
+                    dropdown.value = '';
+                }
+            }
+        });
+    }
+
+    // Handle add button click
+    if (addButton) {
+        addButton.addEventListener('click', () => {
+            const value = customInput.value.trim();
+            if (value) {
+                addTag(value);
+                customInput.value = '';
+                customInput.style.display = 'none';
+                addButton.style.display = 'none';
+                dropdown.value = '';
+            }
+        });
+    }
 }
 
 // Render tags in task card

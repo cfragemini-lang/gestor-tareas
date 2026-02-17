@@ -203,3 +203,48 @@
     width: auto;
     margin: 0;
 }
+
+/* Tags dropdown in modal */
+.tags-dropdown {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: #f8fafc;
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tags-dropdown:hover,
+.tags-dropdown:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.tags-dropdown option {
+    background: #1e293b;
+    color: #f8fafc;
+}
+
+.btn-add-tag {
+    background: var(--primary-color);
+    border: none;
+    color: #0f172a;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.btn-add-tag:hover {
+    background: #b08d47;
+    transform: translateY(-1px);
+}
+
+.btn-add-tag:active {
+    transform: translateY(0);
+}
