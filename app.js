@@ -215,7 +215,19 @@ function applyFilters() {
         filtered = filtered.filter(t => {
             if (!t.due_date) return false;
 
-            const taskDate = new Date(t.due_date);
+            // Parse date correctly - handle both formats
+            let taskDate;
+            if (t.due_date.includes('-')) {
+                // Format: YYYY-MM-DD
+                taskDate = new Date(t.due_date);
+            } else {
+                // Format: M/D/YYYY or MM/DD/YYYY
+                const parts = t.due_date.split('/');
+                // JavaScript Date expects: new Date(year, monthIndex, day)
+                // monthIndex is 0-based (0=January, 11=December)
+                taskDate = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
+            }
+
             const monthMatch = currentFilters.month === '' || taskDate.getMonth() === parseInt(currentFilters.month);
             const yearMatch = currentFilters.year === '' || taskDate.getFullYear() === parseInt(currentFilters.year);
 
