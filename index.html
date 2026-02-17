@@ -19,10 +19,29 @@
         <div class="blob blob-3"></div>
     </div>
 
+    <div id="login-screen">
+        <div class="login-content">
+            <h1>Gestor de Tareas</h1>
+            <p>Gestión de casos y tareas judiciales.</p>
+            <button id="btn-login" class="btn-google">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="20">
+                Iniciar sesión con Google
+            </button>
+        </div>
+    </div>
+
     <div class="app-container">
         <header class="app-header">
-            <h1><i class="fa-solid fa-layer-group"></i> TaskMaster</h1>
-            <button id="theme-toggle" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
+            <h1><i class="fa-solid fa-briefcase"></i> Gestor de Tareas</h1>
+            <div style="display: flex; align-items: center;">
+                <div id="user-info" class="user-info" style="display: none;">
+                    <img src="" alt="User" class="user-avatar">
+                    <span class="user-name">Usuario</span>
+                    <button id="btn-logout" title="Cerrar sesión"><i
+                            class="fa-solid fa-right-from-bracket"></i></button>
+                </div>
+                <button id="theme-toggle" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
+            </div>
         </header>
 
         <div class="toolbar">

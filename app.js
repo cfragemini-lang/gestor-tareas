@@ -1,6 +1,7 @@
 // app.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -16,9 +17,21 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 const tasksCollection = collection(db, "tasks");
 
+// Auth Provider
+const provider = new GoogleAuthProvider();
+
 // DOM Elements
+const loginScreen = document.getElementById('login-screen');
+const appContainer = document.querySelector('.app-container');
+const btnLogin = document.getElementById('btn-login');
+const btnLogout = document.getElementById('btn-logout');
+const userInfo = document.getElementById('user-info');
+const userAvatar = document.querySelector('.user-avatar');
+const userName = document.querySelector('.user-name');
+
 const modal = document.getElementById('task-modal');
 const taskForm = document.getElementById('task-form');
 const btnNewTask = document.getElementById('btn-new-task');
@@ -31,14 +44,65 @@ const searchInput = document.getElementById('searchInput');
 let tasks = [];
 let isEditing = false;
 let currentTaskId = null;
+let currentUser = null;
+let unsubscribe = null; // To stop listener on logout
 
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
-    subscribeToTasks(); // Real-time listener
+    // Auth Listener handles flow
 });
 
+// Auth Flow
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // Logged In
+        currentUser = user;
+        loginScreen.style.opacity = '0';
+        setTimeout(() => loginScreen.style.display = 'none', 500);
+
+        // Show User Info
+        userInfo.style.display = 'flex';
+        userName.textContent = user.displayName;
+        userAvatar.src = user.photoURL;
+
+        // Load tasks
+        subscribeToTasks(user.uid);
+    } else {
+        // Logged Out
+        currentUser = null;
+        loginScreen.style.display = 'flex';
+        setTimeout(() => loginScreen.style.opacity = '1', 10);
+
+        userInfo.style.display = 'none';
+
+        // Clear tasks
+        if (unsubscribe) unsubscribe();
+        renderTasks([]);
+    }
+});
+
+function login() {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            console.log("Logged in:", result.user.displayName);
+        }).catch((error) => {
+            console.error(error);
+            alert("Error al iniciar sesión: " + error.message);
+        });
+}
+
+function logout() {
+    if (confirm("¿Cerrar sesión?")) {
+        signOut(auth);
+    }
+}
+
 function setupEventListeners() {
+    // Auth
+    btnLogin.addEventListener('click', login);
+    btnLogout.addEventListener('click', logout);
+
     // Modal controls
     btnNewTask.addEventListener('click', () => openModal());
     closeModal.addEventListener('click', () => modal.style.display = 'none');
@@ -69,7 +133,7 @@ function setupEventListeners() {
         }
     });
 
-    // Expose functions to window (since we are a module now)
+    // Global Functions
     window.editTask = (id) => {
         const task = tasks.find(t => t.id === id);
         if (task) openModal(task);
@@ -87,10 +151,19 @@ function setupEventListeners() {
 }
 
 // Real-time listener
-function subscribeToTasks() {
-    const q = query(tasksCollection, orderBy("created_at", "desc"));
+function subscribeToTasks(userId) {
+    if (unsubscribe) unsubscribe();
 
-    onSnapshot(q, (snapshot) => {
+    // Query: Tasks created by THIS user, ordered by date
+    // Note: This requires a Compound Query Index in Firestore (userId + created_at)
+    // If it fails initially, we'll strip the orderBy temporary or guide user to create index
+    const q = query(
+        tasksCollection,
+        where("userId", "==", userId),
+        orderBy("created_at", "desc")
+    );
+
+    unsubscribe = onSnapshot(q, (snapshot) => {
         tasks = snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
@@ -98,10 +171,12 @@ function subscribeToTasks() {
         renderTasks(tasks);
     }, (error) => {
         console.error("Error getting tasks: ", error);
-        if (error.code === 'permission-denied') {
-            alert('Error de Permisos: Asegurate de configurar las reglas de Firestore en modo prueba, consulta la guia de seguridad.');
-        } else {
-            document.querySelector('.kanban-board').innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #ef4444;"><h3>Error de Conexión</h3><p>Verifica tu configuración de Firebase en app.js</p></div>';
+        if (error.code === 'failed-precondition') {
+            // Index missing error - typical in Firebase
+            console.warn("Index needed. Providing link.");
+            alert("Para ordenar las tareas, Firebase necesita crear un 'Índice'. Abre la consola (F12) para ver el enlace de creación.");
+        } else if (error.code === 'permission-denied') {
+            alert('Error de Permisos: Revisa las reglas de seguridad.');
         }
     });
 }
@@ -142,7 +217,6 @@ function createTaskCard(task) {
     div.className = 'task-card';
     div.draggable = true;
 
-    // Date formatting
     const dateStr = task.due_date ? new Date(task.due_date).toLocaleDateString() : '';
 
     div.innerHTML = `
@@ -153,7 +227,7 @@ function createTaskCard(task) {
         <div class="task-title">${task.title}</div>
         <div class="task-desc">${task.description || ''}</div>
         <div class="task-footer">
-            <span>#${task.id.substr(0, 4)}</span> <!-- Short ID for visual -->
+            <span>#${task.id.substr(0, 4)}</span>
             <div class="task-actions">
                 <button class="action-btn" onclick="editTask('${task.id}')"><i class="fa-solid fa-pen"></i></button>
                 <button class="action-btn delete-btn" onclick="deleteTask('${task.id}')"><i class="fa-solid fa-trash"></i></button>
@@ -186,12 +260,18 @@ function openModal(task = null) {
 async function handleFormSubmit(e) {
     e.preventDefault();
 
+    if (!currentUser) {
+        alert("Debes iniciar sesión para crear tareas.");
+        return;
+    }
+
     const taskData = {
         title: document.getElementById('input-title').value,
         description: document.getElementById('input-desc').value,
         priority: document.getElementById('input-priority').value,
         status: document.getElementById('input-status').value,
         due_date: document.getElementById('input-date').value,
+        userId: currentUser.uid // IMPORTANT: Link task to user
     };
 
     try {
