@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeCharts();
     initTagsSystem(); // Initialize tags system
     initRecurringSystem(); // Initialize recurring system
+    initGuideSystem(); // Initialize guide system
 });
 
 // Auth Flow

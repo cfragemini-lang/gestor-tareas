@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="responsive.css">
     <link rel="stylesheet" href="tags-styles.css">
     <link rel="stylesheet" href="recurring-styles.css">
+    <link rel="stylesheet" href="guide-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- SortableJS for Drag & Drop -->
@@ -59,6 +60,9 @@
                     <button id="btn-logout" title="Cerrar sesión"><i
                             class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
+                <button id="btn-help" class="btn-icon" title="Guía de uso">
+                    <i class="fa-solid fa-circle-question"></i>
+                </button>
                 <button id="theme-toggle" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
             </div>
         </header>
@@ -105,8 +109,140 @@
                     <span class="metric-value" id="metric-productivity">0%</span>
                 </div>
             </div>
-        </div>
+        </div><!-- End of Dashboard Section -->
 
+        <!-- USER GUIDE MODAL -->
+        <div id="guide-modal" class="guide-modal">
+            <div class="guide-container">
+                <div class="guide-header">
+                    <h2><i class="fa-solid fa-circle-info"></i> Guía de Uso del Tablero</h2>
+                    <button class="guide-close">&times;</button>
+                </div>
+                <div class="guide-body">
+                    <div class="guide-sidebar">
+                        <div class="guide-nav-item active" onclick="switchGuideTab('welcome')">
+                            <i class="fa-solid fa-house"></i> Inicio
+                        </div>
+                        <div class="guide-nav-item" onclick="switchGuideTab('tasks')">
+                            <i class="fa-solid fa-list-check"></i> Tareas
+                        </div>
+                        <div class="guide-nav-item" onclick="switchGuideTab('tags')">
+                            <i class="fa-solid fa-tags"></i> Etiquetas
+                        </div>
+                        <div class="guide-nav-item" onclick="switchGuideTab('recurring')">
+                            <i class="fa-solid fa-repeat"></i> Recurrencia
+                        </div>
+                        <div class="guide-nav-item" onclick="switchGuideTab('dashboard')">
+                            <i class="fa-solid fa-chart-line"></i> Dashboard
+                        </div>
+                        <div class="guide-nav-item" onclick="switchGuideTab('export')">
+                            <i class="fa-solid fa-file-export"></i> Exportar
+                        </div>
+                    </div>
+                    <div class="guide-content">
+                        <!-- Welcome Section -->
+                        <section id="guide-section-welcome" class="guide-section active">
+                            <div class="guide-step">
+                                <h3>¡Bienvenido a tu Tablero Premium!</h3>
+                                <p>Este gestor de tareas ha sido diseñado para maximizar tu productividad con un diseño
+                                    elegante y herramientas avanzadas. Aquí tienes una visión general de lo que puedes
+                                    hacer.</p>
+                                <div class="guide-tip">
+                                    <strong>💡 Tip Rápido:</strong>
+                                    Puedes arrastrar las tareas entre las columnas para cambiar su estado rápidamente.
+                                </div>
+                                <ul class="guide-feature-list">
+                                    <li><i class="fa-solid fa-check-double"></i> Gestión ágil de tareas</li>
+                                    <li><i class="fa-solid fa-tags"></i> Organización por etiquetas estandarizadas</li>
+                                    <li><i class="fa-solid fa-sync"></i> Automatización de tareas recurrentes</li>
+                                    <li><i class="fa-solid fa-chart-pie"></i> Visualización de datos en tiempo real</li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        <!-- Tasks Section -->
+                        <section id="guide-section-tasks" class="guide-section">
+                            <div class="guide-step">
+                                <h3>Gestión de Tareas</h3>
+                                <p>Crear y organizar tareas es muy sencillo:</p>
+                                <ul class="guide-feature-list">
+                                    <li><strong>Nueva Tarea:</strong> Haz clic en el botón dorado (+ Nueva Tarea) en la
+                                        parte superior.</li>
+                                    <li><strong>Editar:</strong> Haz clic en el icono del lápiz en cualquier tarjeta de
+                                        tarea.</li>
+                                    <li><strong>Drag & Drop:</strong> Arrastra tareas entre "Pendiente", "En Progreso" y
+                                        "Completado".</li>
+                                    <li><strong>Estandarización:</strong> Los títulos se formatearán automáticamente
+                                        (Title Case) para mantener el orden.</li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        <!-- Tags Section -->
+                        <section id="guide-section-tags" class="guide-section">
+                            <div class="guide-step">
+                                <h3>Etiquetas y Organización</h3>
+                                <p>Usa etiquetas para categorizar tus actividades de forma eficiente.</p>
+                                <ul class="guide-feature-list">
+                                    <li><strong>Estandarización:</strong> Selecciona etiquetas del dropdown (Trabajo,
+                                        Urgente, Pago, etc.).</li>
+                                    <li><strong>Personalización:</strong> Si necesitas una etiqueta única, elige
+                                        "Otro..." y escríbela.</li>
+                                    <li><strong>Filtrado:</strong> Usa el buscador o el filtro de etiquetas en el
+                                        toolbar para encontrar lo que necesitas al instante.</li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        <!-- Recurring Section -->
+                        <section id="guide-section-recurring" class="guide-section">
+                            <div class="guide-step">
+                                <h3>Tareas Recurrentes</h3>
+                                <p>¡No vuelvas a olvidar una tarea repetitiva!</p>
+                                <ul class="guide-feature-list">
+                                    <li><strong>Configuración:</strong> Marca la casilla "Tarea Recurrente" al crear o
+                                        editar una tarea.</li>
+                                    <li><strong>Tipos:</strong> Elige entre Diario, Semanal (días específicos) o Mensual
+                                        (día del mes).</li>
+                                    <li><strong>Auto-generación:</strong> Al completar una tarea recurrente, el sistema
+                                        genera automáticamente la siguiente ocurrencia en estado "Pendiente".</li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        <!-- Dashboard Section -->
+                        <section id="guide-section-dashboard" class="guide-section">
+                            <div class="guide-step">
+                                <h3>Panel de Control</h3>
+                                <p>Visualiza tu rendimiento y el estado de tus proyectos.</p>
+                                <ul class="guide-feature-list">
+                                    <li><strong>Métricas:</strong> Observa el total de tareas, progreso del mes y
+                                        distribución por prioridad.</li>
+                                    <li><strong>Gráficas:</strong> Analiza tu evolución semanal y los tags más
+                                        utilizados en tiempo real.</li>
+                                </ul>
+                            </div>
+                        </section>
+
+                        <!-- Export Section -->
+                        <section id="guide-section-export" class="guide-section">
+                            <div class="guide-step">
+                                <h3>Exportación y Notificaciones</h3>
+                                <p>Comparte y respalda tu información fácilmente.</p>
+                                <ul class="guide-feature-list">
+                                    <li><strong>PDF/Excel:</strong> Genera reportes detallados con un solo clic.</li>
+                                    <li><strong>Email:</strong> Envía un resumen profesional de tus tareas directamente
+                                        a tu correo.</li>
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="guide-footer">
+                    <button class="btn-primary guide-close-btn" onclick="toggleGuide(false)">Entendido</button>
+                </div>
+            </div>
+        </div>
         <!-- Charts Section -->
         <div class="charts-section">
             <div class="chart-container">
@@ -406,6 +542,9 @@
 
     <!-- Recurring Functions -->
     <script src="recurring-functions.js"></script>
+
+    <!-- Guide Functions -->
+    <script src="guide-functions.js"></script>
 
     <!-- Email Functions -->
     <script src="email-functions.js"></script>
