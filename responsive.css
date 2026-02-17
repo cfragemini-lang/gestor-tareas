@@ -1,0 +1,268 @@
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 1024px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
+/* Móviles */
+@media (max-width: 768px) {
+
+    /* Header */
+    header {
+        padding: 1rem;
+    }
+
+    header h1 {
+        font-size: 1.25rem;
+    }
+
+    .user-info {
+        gap: 0.5rem;
+    }
+
+    /* Dashboard */
+    .dashboard {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .metric-card {
+        padding: 1rem;
+    }
+
+    .metric-value {
+        font-size: 1.75rem;
+    }
+
+    .charts-section {
+        gap: 1rem;
+    }
+
+    .chart-container {
+        padding: 1rem;
+    }
+
+    .chart-container h3 {
+        font-size: 1rem;
+    }
+
+    /* Toolbar */
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .filter-controls {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .filter-controls select,
+    .filter-controls button {
+        width: 100%;
+    }
+
+    .toolbar-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .toolbar-actions button {
+        flex: 1;
+    }
+
+    /* Board */
+    .board {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .column {
+        min-width: 100%;
+    }
+
+    .column-header {
+        padding: 0.75rem;
+    }
+
+    /* Task Cards */
+    .task-card {
+        padding: 1rem;
+    }
+
+    .task-title {
+        font-size: 0.95rem;
+    }
+
+    .task-description {
+        font-size: 0.85rem;
+    }
+
+    .task-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .task-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .task-actions button {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.85rem;
+    }
+
+    /* Modal */
+    .modal-content {
+        width: 95%;
+        max-width: 95%;
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .modal-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+
+    /* Export Modal */
+    .export-options {
+        flex-direction: column;
+    }
+
+    .export-option {
+        width: 100%;
+    }
+
+    /* Login Screen */
+    .login-container {
+        padding: 2rem 1.5rem;
+        max-width: 90%;
+    }
+
+    .login-container h1 {
+        font-size: 1.75rem;
+    }
+
+    /* Buttons */
+    .btn-primary,
+    .btn-secondary {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.1rem;
+    }
+
+    .metric-card {
+        padding: 0.75rem;
+    }
+
+    .metric-value {
+        font-size: 1.5rem;
+    }
+
+    .metric-label {
+        font-size: 0.75rem;
+    }
+
+    .task-card {
+        padding: 0.75rem;
+    }
+
+    .priority-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .modal-content {
+        padding: 1rem;
+    }
+}
+
+/* Landscape móviles */
+@media (max-height: 600px) and (orientation: landscape) {
+    .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .login-container {
+        padding: 1.5rem;
+    }
+}
+
+/* Touch improvements */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Aumentar áreas táctiles */
+    button,
+    .task-card,
+    select,
+    input {
+        min-height: 44px;
+        /* Tamaño mínimo recomendado para touch */
+    }
+
+    .task-actions button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    /* Mejorar feedback táctil */
+    button:active,
+    .task-card:active {
+        transform: scale(0.98);
+    }
+
+    /* Deshabilitar hover en touch */
+    .task-card:hover {
+        transform: none;
+    }
+}
