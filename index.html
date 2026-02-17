@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="responsive.css">
     <link rel="stylesheet" href="tags-styles.css">
+    <link rel="stylesheet" href="recurring-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- SortableJS for Drag & Drop -->
@@ -259,6 +260,58 @@
                     <input type="date" id="input-date">
                 </div>
 
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="input-recurring">
+                        <span>🔁 Tarea Recurrente</span>
+                    </label>
+                </div>
+
+                <div id="recurring-config" class="recurring-config" style="display: none;">
+                    <div class="form-group">
+                        <label>Tipo de Recurrencia</label>
+                        <select id="recurring-type">
+                            <option value="daily">📅 Diario</option>
+                            <option value="weekly">📆 Semanal</option>
+                            <option value="monthly">🗓️ Mensual</option>
+                        </select>
+                    </div>
+
+                    <div id="recurring-daily-config" class="recurring-type-config">
+                        <div class="form-group">
+                            <label>Repetir cada</label>
+                            <input type="number" id="recurring-daily-interval" min="1" value="1" style="width: 80px;">
+                            <span style="margin-left: 0.5rem;">día(s)</span>
+                        </div>
+                    </div>
+
+                    <div id="recurring-weekly-config" class="recurring-type-config" style="display: none;">
+                        <div class="form-group">
+                            <label>Días de la semana</label>
+                            <div class="weekdays-selector">
+                                <label><input type="checkbox" value="1"> Lun</label>
+                                <label><input type="checkbox" value="2"> Mar</label>
+                                <label><input type="checkbox" value="3"> Mié</label>
+                                <label><input type="checkbox" value="4"> Jue</label>
+                                <label><input type="checkbox" value="5"> Vie</label>
+                                <label><input type="checkbox" value="6"> Sáb</label>
+                                <label><input type="checkbox" value="0"> Dom</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="recurring-monthly-config" class="recurring-type-config" style="display: none;">
+                        <div class="form-group">
+                            <label>Día del mes</label>
+                            <select id="recurring-monthly-day">
+                                <option value="1">Día 1</option>
+                                <option value="15">Día 15</option>
+                                <option value="last">Último día</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-actions">
                     <button type="button" class="btn-secondary close-modal-btn">Cancelar</button>
                     <button type="submit" class="btn-primary">Guardar</button>
@@ -330,6 +383,9 @@
 
     <!-- Tags Functions -->
     <script src="tags-functions.js"></script>
+
+    <!-- Recurring Functions -->
+    <script src="recurring-functions.js"></script>
 
     <!-- Email Functions -->
     <script src="email-functions.js"></script>

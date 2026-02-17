@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     initializeCharts();
     initTagsSystem(); // Initialize tags system
+    initRecurringSystem(); // Initialize recurring system
 });
 
 // Auth Flow
@@ -300,6 +301,7 @@ function createTaskCard(task) {
         <div class="task-tags">
             <span class="tag tag-priority-${task.priority}">${task.priority}</span>
             ${dateStr ? `<span class="tag" style="background:rgba(255,255,255,0.1)"><i class="fa-regular fa-calendar"></i> ${dateStr}</span>` : ''}
+            ${task.isRecurring ? '<span class="recurring-badge"><i class="fa-solid fa-repeat"></i> Recurrente</span>' : ''}
         </div>
         <div class="task-title">${task.title}</div>
         <div class="task-desc">${task.description || ''}</div>
@@ -614,6 +616,9 @@ function openModal(task = null) {
         // Load tags
         currentTags = task.tags || [];
         renderTagsChips();
+
+        // Load recurring config
+        loadRecurringConfig(task);
     } else {
         taskForm.reset();
         document.getElementById('input-priority').value = 'media';
@@ -622,6 +627,9 @@ function openModal(task = null) {
         // Clear tags
         currentTags = [];
         renderTagsChips();
+
+        // Clear recurring config
+        clearRecurringConfig();
     }
 }
 
@@ -643,9 +651,25 @@ async function handleFormSubmit(e) {
         userId: currentUser.uid
     };
 
+    // Add recurring configuration
+    const recurringConfig = getRecurringConfig();
+    if (recurringConfig) {
+        taskData.isRecurring = true;
+        taskData.recurrence = recurringConfig;
+    } else {
+        taskData.isRecurring = false;
+        taskData.recurrence = null;
+    }
+
     try {
         if (isEditing) {
+            const oldTask = tasks.find(t => t.id === currentTaskId);
             await updateDoc(doc(db, "tasks", currentTaskId), taskData);
+
+            // If task was just completed and is recurring, generate next occurrence
+            if (oldTask && oldTask.status !== 'completado' && taskData.status === 'completado' && taskData.isRecurring) {
+                await generateNextRecurringTask(taskData, currentTaskId);
+            }
         } else {
             taskData.created_at = serverTimestamp();
             await addDoc(tasksCollection, taskData);
@@ -655,5 +679,35 @@ async function handleFormSubmit(e) {
     } catch (err) {
         console.error('Error saving task:', err);
         alert('Error al guardar: ' + err.message);
+    }
+}
+
+// Generate next recurring task
+async function generateNextRecurringTask(completedTask, taskId) {
+    if (!completedTask.isRecurring || !completedTask.recurrence || !completedTask.due_date) {
+        return;
+    }
+
+    const nextDate = calculateNextDate(completedTask.due_date, completedTask.recurrence);
+
+    const nextTask = {
+        title: completedTask.title,
+        description: completedTask.description,
+        priority: completedTask.priority,
+        status: 'pendiente', // Reset to pending
+        due_date: nextDate,
+        tags: completedTask.tags || [],
+        isRecurring: true,
+        recurrence: completedTask.recurrence,
+        parentRecurringId: taskId, // Link to parent
+        userId: completedTask.userId,
+        created_at: serverTimestamp()
+    };
+
+    try {
+        await addDoc(tasksCollection, nextTask);
+        console.log('Next recurring task generated:', nextTask);
+    } catch (err) {
+        console.error('Error generating next recurring task:', err);
     }
 }

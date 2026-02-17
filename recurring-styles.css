@@ -1,0 +1,98 @@
+/* ========== RECURRING TASKS ========== */
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkbox-label span {
+    font-weight: 500;
+    color: #c5a059;
+}
+
+.recurring-config {
+    background: rgba(197, 160, 89, 0.05);
+    border: 1px solid rgba(197, 160, 89, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.recurring-type-config {
+    margin-top: 1rem;
+}
+
+.weekdays-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.weekdays-selector label {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.weekdays-selector label:hover {
+    background: rgba(197, 160, 89, 0.1);
+    border-color: var(--primary-color);
+}
+
+.weekdays-selector input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.weekdays-selector input[type="checkbox"]:checked+label,
+.weekdays-selector label:has(input:checked) {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* Recurring badge in task card */
+.recurring-badge {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.recurring-badge i {
+    font-size: 0.7rem;
+}
