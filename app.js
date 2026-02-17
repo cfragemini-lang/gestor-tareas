@@ -244,6 +244,8 @@ function applyFilters() {
     }
 
     renderTasks(filtered);
+    updateMetrics(filtered);  // Update metrics with filtered tasks
+    updateCharts(filtered);   // Update charts with filtered tasks
 }
 
 
