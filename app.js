@@ -328,13 +328,27 @@ function updateCharts(tasksData) {
 
 // ========== EXPORT FUNCTIONALITY ==========
 function showExportMenu() {
-    const menu = confirm("¿Exportar a PDF? (Aceptar = PDF, Cancelar = Excel)");
-    if (menu) {
-        exportToPDF();
-    } else {
-        exportToExcel();
-    }
+    document.getElementById('export-modal').style.display = 'flex';
 }
+
+function closeExportModal() {
+    document.getElementById('export-modal').style.display = 'none';
+}
+
+function handleExportPDF() {
+    exportToPDF();
+    closeExportModal();
+}
+
+function handleExportExcel() {
+    exportToExcel();
+    closeExportModal();
+}
+
+// Make functions globally accessible
+window.closeExportModal = closeExportModal;
+window.handleExportPDF = handleExportPDF;
+window.handleExportExcel = handleExportExcel;
 
 function exportToPDF() {
     const { jsPDF } = window.jspdf;
