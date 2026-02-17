@@ -1,0 +1,38 @@
+<!-- Email Notification Modal -->
+<div id="email-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fa-solid fa-envelope"></i> Enviar Notificación por Email</h2>
+            <button class="modal-close" onclick="closeEmailModal()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="email-to">Correo Destino:</label>
+                <input type="email" id="email-to" placeholder="ejemplo@correo.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Tareas a Notificar:</label>
+                <div id="selected-tasks-preview"
+                    style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; max-height: 200px; overflow-y: auto;">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                    <input type="checkbox" id="notify-all-pending" style="width: auto;">
+                    <span>Enviar todas las tareas pendientes (ignorar selección)</span>
+                </label>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="closeEmailModal()">Cancelar</button>
+            <button type="button" class="btn-primary" onclick="sendEmailNotification()">
+                <i class="fa-solid fa-paper-plane"></i> Enviar Email
+            </button>
+        </div>
+    </div>
+</div>

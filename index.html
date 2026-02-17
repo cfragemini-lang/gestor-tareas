@@ -24,6 +24,9 @@
 
     <!-- SheetJS for Excel Export -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <!-- EmailJS for Email Notifications -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 
 <body>
@@ -146,7 +149,10 @@
                 </button>
             </div>
 
-            <div style="display: flex; gap: 1rem;">
+            <div style="display: flex; gap: 1rem;" class="toolbar-actions">
+                <button id="btn-notify" class="btn-secondary">
+                    <i class="fa-solid fa-envelope"></i> Notificar
+                </button>
                 <button id="btn-export" class="btn-secondary">
                     <i class="fa-solid fa-download"></i> Exportar
                 </button>
@@ -270,6 +276,41 @@
             </div>
         </div>
     </div>
+
+    <!-- Email Notification Modal -->
+    <div id="email-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-envelope"></i> Enviar Notificación por Email</h2>
+                <button class="modal-close" onclick="closeEmailModal()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="email-to">Correo Destino:</label>
+                    <input type="email" id="email-to" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tareas a Notificar:</label>
+                    <div id="selected-tasks-preview"
+                        style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; max-height: 200px; overflow-y: auto;">
+                        <p style="color: #94a3b8; font-size: 0.9rem;">Se enviarán todas las tareas pendientes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeEmailModal()">Cancelar</button>
+                <button type="button" class="btn-primary" onclick="sendEmailNotification()">
+                    <i class="fa-solid fa-paper-plane"></i> Enviar Email
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Functions -->
+    <script src="email-functions.js"></script>
 
     <!-- Firebase SDKs -->
     <script type="module" src="app.js"></script>

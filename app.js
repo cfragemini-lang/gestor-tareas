@@ -31,6 +31,7 @@ const userName = document.querySelector('.user-name');
 const modal = document.getElementById('task-modal');
 const taskForm = document.getElementById('task-form');
 const btnNewTask = document.getElementById('btn-new-task');
+const btnNotify = document.getElementById('btn-notify');
 const btnExport = document.getElementById('btn-export');
 const closeModal = document.querySelector('.close-modal');
 const closeModalBtn = document.querySelector('.close-modal-btn');
@@ -99,6 +100,7 @@ function setupEventListeners() {
     btnLogin.addEventListener('click', login);
     btnLogout.addEventListener('click', logout);
     btnNewTask.addEventListener('click', () => openModal());
+    btnNotify.addEventListener('click', openEmailModal);
     btnExport.addEventListener('click', showExportMenu);
     closeModal.addEventListener('click', () => modal.style.display = 'none');
     closeModalBtn.addEventListener('click', () => modal.style.display = 'none');

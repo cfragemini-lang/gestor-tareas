@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recordatorio de Tareas</title>
+    <style>
+        /* Reset */
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        /* Base */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            color: #c5a059;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .header-subtitle {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Content */
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            font-size: 24px;
+            color: #0f172a;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .intro-text {
+            color: #475569;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Task Count Badge */
+        .task-count {
+            background: linear-gradient(135deg, #c5a059 0%, #d4af6a 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(197, 160, 89, 0.3);
+        }
+
+        /* Tasks Table */
+        .tasks-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .tasks-table th {
+            background-color: #f8fafc;
+            color: #0f172a;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tasks-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #475569;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .task-description {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .task-date {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* Priority Badges */
+        .priority-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-alta {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority-media {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority-baja {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pendiente {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-en_progreso {
+            background-color: #dbeafe;
+            color: #2563eb;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            background: linear-gradient(135deg, #c5a059 0%, #d4af6a 100%);
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(197, 160, 89, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer-text {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .footer-link {
+            color: #c5a059;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+
+            .content {
+                padding: 20px !important;
+            }
+
+            .greeting {
+                font-size: 20px !important;
+            }
+
+            .tasks-table th,
+            .tasks-table td {
+                padding: 10px !important;
+                font-size: 14px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td style="padding: 20px 0;">
+                <table class="email-container" cellspacing="0" cellpadding="0" border="0">
+
+                    <!-- Header -->
+                    <tr>
+                        <td class="header">
+                            <div class="logo-icon">📋</div>
+                            <h1 class="logo">Gestor de Tareas</h1>
+                            <p class="header-subtitle">Sistema de Gestión Premium</p>
+                        </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <tr>
+                        <td class="content">
+                            <h2 class="greeting">¡Hola! 👋</h2>
+
+                            <p class="intro-text">
+                                Tienes <strong>{{task_count}}</strong> tarea(s) que requieren tu atención.
+                                Aquí está el resumen de tus tareas pendientes:
+                            </p>
+
+                            <div style="text-align: center;">
+                                <span class="task-count">
+                                    📌 {{task_count}} Tarea(s) Pendiente(s)
+                                </span>
+                            </div>
+
+                            <!-- Tasks Table -->
+                            <table class="tasks-table" role="presentation">
+                                <thead>
+                                    <tr>
+                                        <th>Tarea</th>
+                                        <th>Prioridad</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{tasks_html}}
+                                </tbody>
+                            </table>
+
+                            <div style="text-align: center;">
+                                <a href="https://cfragemini-lang.github.io/gestor-tareas/" class="cta-button">
+                                    Ver Todas las Tareas →
+                                </a>
+                            </div>
+
+                            <p class="intro-text" style="margin-top: 30px;">
+                                💡 <strong>Consejo:</strong> Organiza tus tareas por prioridad para maximizar tu
+                                productividad.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer">
+                            <p class="footer-text">
+                                Este es un recordatorio automático de tu <strong>Gestor de Tareas Premium</strong>.<br>
+                                Gestiona tus tareas de manera eficiente y profesional.
+                            </p>
+                            <p class="footer-text" style="margin-top: 15px;">
+                                <a href="https://cfragemini-lang.github.io/gestor-tareas/" class="footer-link">
+                                    Acceder al Gestor
+                                </a>
+                            </p>
+                            <p class="footer-text" style="margin-top: 20px; font-size: 11px;">
+                                © 2026 Gestor de Tareas Premium. Todos los derechos reservados.
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
