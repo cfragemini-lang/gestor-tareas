@@ -246,21 +246,10 @@ function applyFilters() {
     renderTasks(filtered);
 }
 
+
 function renderFilteredTasks(term) {
     currentFilters.search = term;
     applyFilters();
-}
-
-function renderFilteredTasks(term) {
-    if (!term) {
-        renderTasks(tasks);
-        return;
-    }
-    const filtered = tasks.filter(t =>
-        t.title.toLowerCase().includes(term) ||
-        (t.description && t.description.toLowerCase().includes(term))
-    );
-    renderTasks(filtered);
 }
 
 function renderTasks(tasksToRender) {
