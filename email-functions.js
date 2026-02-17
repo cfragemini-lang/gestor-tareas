@@ -13,6 +13,7 @@ window.closeEmailModal = function () {
 };
 
 window.openEmailModal = function () {
+    const tasks = window.tasks || [];
     const pendingTasks = tasks.filter(t => t.status === 'pendiente');
 
     if (pendingTasks.length === 0) {
@@ -56,6 +57,7 @@ window.sendEmailNotification = async function () {
         return;
     }
 
+    const tasks = window.tasks || [];
     const pendingTasks = tasks.filter(t => t.status === 'pendiente');
 
     if (pendingTasks.length === 0) {
@@ -97,11 +99,12 @@ window.sendEmailNotification = async function () {
     }).join('');
 
     // Email parameters
+    const userName = window.userName || document.querySelector('.user-name');
     const templateParams = {
         to_email: emailTo,
         task_count: pendingTasks.length,
         tasks_html: tasksHtml,
-        user_name: userName.textContent || 'Usuario'
+        user_name: userName ? (userName.textContent || 'Usuario') : 'Usuario'
     };
 
     // Show loading

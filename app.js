@@ -55,6 +55,10 @@ let currentFilters = {
     year: ''
 };
 
+// Make tasks globally accessible for email functions
+window.tasks = tasks;
+window.userName = userName;
+
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
