@@ -214,6 +214,35 @@
         </div>
     </div>
 
+    <!-- Export Modal -->
+    <div id="export-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <span class="close-modal" onclick="closeExportModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; font-family: 'Playfair Display', serif;">Exportar Tareas</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Selecciona el formato de exportación:</p>
+
+            <div style="display: flex; gap: 1rem; flex-direction: column;">
+                <button onclick="handleExportPDF()" class="btn-export-option"
+                    style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: transform 0.2s;">
+                    <i class="fa-solid fa-file-pdf" style="font-size: 1.5rem;"></i>
+                    <div style="text-align: left;">
+                        <div style="font-size: 1rem;">Exportar a PDF</div>
+                        <div style="font-size: 0.75rem; opacity: 0.8;">Reporte profesional imprimible</div>
+                    </div>
+                </button>
+
+                <button onclick="handleExportExcel()" class="btn-export-option"
+                    style="background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; padding: 1rem; border-radius: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: transform 0.2s;">
+                    <i class="fa-solid fa-file-excel" style="font-size: 1.5rem;"></i>
+                    <div style="text-align: left;">
+                        <div style="font-size: 1rem;">Exportar a Excel</div>
+                        <div style="font-size: 0.75rem; opacity: 0.8;">Hoja de cálculo editable</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDKs -->
     <script type="module" src="app.js"></script>
 </body>
