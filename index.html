@@ -230,9 +230,29 @@
                     <label>🏷️ Etiquetas (Tags)</label>
                     <div class="tags-input-container">
                         <div id="tags-chips" class="tags-chips"></div>
-                        <input type="text" id="input-tags" placeholder="Escribe y presiona Enter..." class="tags-input">
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <select id="tags-dropdown" class="tags-dropdown">
+                                <option value="">Seleccionar tag...</option>
+                                <option value="trabajo">💼 Trabajo</option>
+                                <option value="personal">👤 Personal</option>
+                                <option value="urgente">🚨 Urgente</option>
+                                <option value="importante">⭐ Importante</option>
+                                <option value="reunion">👥 Reunión</option>
+                                <option value="proyecto">📁 Proyecto</option>
+                                <option value="pago">💰 Pago</option>
+                                <option value="salud">🏥 Salud</option>
+                                <option value="estudio">📚 Estudio</option>
+                                <option value="casa">🏠 Casa</option>
+                                <option value="otro">✏️ Otro...</option>
+                            </select>
+                            <input type="text" id="input-tags-custom" placeholder="Tag personalizado..."
+                                class="tags-input" style="display: none;">
+                            <button type="button" id="btn-add-tag" class="btn-add-tag" style="display: none;">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
-                    <small style="color: #94a3b8; font-size: 0.85rem;">Presiona Enter para agregar. Máximo 5
+                    <small style="color: #94a3b8; font-size: 0.85rem;">Selecciona o crea tags personalizados. Máximo 5
                         tags.</small>
                 </div>
 
