@@ -116,6 +116,10 @@
                 <h3>Progreso del Período</h3>
                 <canvas id="weeklyChart"></canvas>
             </div>
+            <div class="chart-container">
+                <h3>🏷️ Distribución por Tags</h3>
+                <canvas id="tagsChart"></canvas>
+            </div>
         </div>
 
         <div class="toolbar">
@@ -143,6 +147,10 @@
 
                 <select id="filter-year" class="filter-select">
                     <option value="">Todos los años</option>
+                </select>
+
+                <select id="filter-tags" class="filter-select">
+                    <option value="">🏷️ Todos los tags</option>
                 </select>
 
                 <button id="btn-clear-filters" class="btn-icon" title="Limpiar filtros">

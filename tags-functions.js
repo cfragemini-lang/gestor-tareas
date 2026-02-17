@@ -99,7 +99,35 @@ function getAllTags() {
     return Array.from(allTags).sort();
 }
 
+// Populate tags filter dropdown
+window.populateTagsFilter = function () {
+    const filterTags = document.getElementById('filter-tags');
+    if (!filterTags) return;
+
+    const allTags = getAllTags();
+
+    // Keep "Todos los tags" option and add tags
+    filterTags.innerHTML = '<option value="">🏷️ Todos los tags</option>';
+
+    allTags.forEach(tag => {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.textContent = tag;
+        filterTags.appendChild(option);
+    });
+};
+
 // Initialize tags system
 function initTagsSystem() {
     setupTagsInput();
+
+    // Setup tags filter listener
+    const filterTags = document.getElementById('filter-tags');
+    if (filterTags) {
+        filterTags.addEventListener('change', () => {
+            if (window.applyFilters) {
+                window.applyFilters();
+            }
+        });
+    }
 }

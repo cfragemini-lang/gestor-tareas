@@ -176,6 +176,7 @@ function subscribeToTasks(userId) {
         }));
         window.tasks = tasks; // Make tasks globally accessible
         populateYearFilter();
+        populateTagsFilter(); // Populate tags filter
         applyFilters();
         updateMetrics(tasks);
         updateCharts(tasks);
@@ -249,6 +250,15 @@ function applyFilters() {
 
             return monthMatch && yearMatch;
         });
+    }
+
+    // Tags filter
+    const filterTags = document.getElementById('filter-tags');
+    if (filterTags && filterTags.value) {
+        const selectedTag = filterTags.value;
+        filtered = filtered.filter(t =>
+            t.tags && Array.isArray(t.tags) && t.tags.includes(selectedTag)
+        );
     }
 
     renderTasks(filtered);
@@ -404,6 +414,36 @@ function initializeCharts() {
             }
         }
     });
+
+    // Tags Chart (Bar)
+    const tagsCtx = document.getElementById('tagsChart').getContext('2d');
+    window.tagsChart = new Chart(tagsCtx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Tareas por Tag',
+                data: [],
+                backgroundColor: '#c5a059',
+                borderColor: '#b08d47',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            ...chartOptions,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: '#94a3b8', stepSize: 1 },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
 }
 
 function updateCharts(tasksData) {
@@ -456,6 +496,26 @@ function updateCharts(tasksData) {
     }
 
     weeklyChart.update();
+
+    // Update Tags Chart
+    if (window.tagsChart) {
+        const tagCounts = {};
+        tasksData.forEach(task => {
+            if (task.tags && Array.isArray(task.tags)) {
+                task.tags.forEach(tag => {
+                    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+                });
+            }
+        });
+
+        const sortedTags = Object.entries(tagCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 10); // Top 10 tags
+
+        window.tagsChart.data.labels = sortedTags.map(([tag]) => tag);
+        window.tagsChart.data.datasets[0].data = sortedTags.map(([, count]) => count);
+        window.tagsChart.update();
+    }
 }
 
 // ========== EXPORT FUNCTIONALITY ==========
