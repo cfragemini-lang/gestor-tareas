@@ -406,18 +406,46 @@ function updateCharts(tasksData) {
     priorityChart.data.datasets[0].data = [alta, media, baja];
     priorityChart.update();
 
-    // Update Weekly Chart (mock data for now - can be enhanced with real date tracking)
+    // Update Monthly Progress Chart
     const completedTasks = tasksData.filter(t => t.status === 'completado');
-    const weeklyData = [0, 0, 0, 0, 0, 0, 0];
 
-    completedTasks.forEach(task => {
-        if (task.created_at && task.created_at.toDate) {
-            const day = task.created_at.toDate().getDay();
-            weeklyData[day === 0 ? 6 : day - 1]++;
-        }
-    });
+    // If filtering by specific month, show weekly breakdown
+    if (currentFilters.month !== '') {
+        const weeklyData = [0, 0, 0, 0]; // 4 weeks
+        weeklyChart.data.labels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
 
-    weeklyChart.data.datasets[0].data = weeklyData;
+        completedTasks.forEach(task => {
+            if (task.due_date) {
+                let taskDate;
+                if (task.due_date.includes('-')) {
+                    taskDate = new Date(task.due_date);
+                } else {
+                    const parts = task.due_date.split('/');
+                    taskDate = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
+                }
+
+                const day = taskDate.getDate();
+                const weekIndex = Math.min(Math.floor((day - 1) / 7), 3);
+                weeklyData[weekIndex]++;
+            }
+        });
+
+        weeklyChart.data.datasets[0].data = weeklyData;
+    } else {
+        // Show all 7 days of the week
+        const weeklyData = [0, 0, 0, 0, 0, 0, 0];
+        weeklyChart.data.labels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+        completedTasks.forEach(task => {
+            if (task.created_at && task.created_at.toDate) {
+                const day = task.created_at.toDate().getDay();
+                weeklyData[day === 0 ? 6 : day - 1]++;
+            }
+        });
+
+        weeklyChart.data.datasets[0].data = weeklyData;
+    }
+
     weeklyChart.update();
 }
 
