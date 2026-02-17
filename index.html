@@ -10,6 +10,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SortableJS for Drag & Drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+    <!-- Chart.js for Dashboard Metrics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- jsPDF for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -44,12 +57,75 @@
             </div>
         </header>
 
+
+        <!-- Dashboard de Métricas -->
+        <div class="dashboard-metrics">
+            <div class="metric-card">
+                <div class="metric-icon" style="background: rgba(245, 158, 11, 0.2);">
+                    <i class="fa-solid fa-clock" style="color: #f59e0b;"></i>
+                </div>
+                <div class="metric-info">
+                    <span class="metric-label">Pendientes</span>
+                    <span class="metric-value" id="metric-pending">0</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon" style="background: rgba(99, 102, 241, 0.2);">
+                    <i class="fa-solid fa-spinner" style="color: #6366f1;"></i>
+                </div>
+                <div class="metric-info">
+                    <span class="metric-label">En Progreso</span>
+                    <span class="metric-value" id="metric-progress">0</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon" style="background: rgba(16, 185, 129, 0.2);">
+                    <i class="fa-solid fa-check-circle" style="color: #10b981;"></i>
+                </div>
+                <div class="metric-info">
+                    <span class="metric-label">Completadas</span>
+                    <span class="metric-value" id="metric-completed">0</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon" style="background: rgba(197, 160, 89, 0.2);">
+                    <i class="fa-solid fa-chart-line" style="color: #c5a059;"></i>
+                </div>
+                <div class="metric-info">
+                    <span class="metric-label">Productividad</span>
+                    <span class="metric-value" id="metric-productivity">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3>Distribución por Prioridad</h3>
+                <canvas id="priorityChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Progreso Semanal</h3>
+                <canvas id="weeklyChart"></canvas>
+            </div>
+        </div>
+
         <div class="toolbar">
             <div class="search-bar">
                 <i class="fa-solid fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Buscar tareas...">
             </div>
-            <button id="btn-new-task" class="btn-primary"><i class="fa-solid fa-plus"></i> Nueva Tarea</button>
+            <div style="display: flex; gap: 1rem;">
+                <button id="btn-export" class="btn-secondary">
+                    <i class="fa-solid fa-download"></i> Exportar
+                </button>
+                <button id="btn-new-task" class="btn-primary">
+                    <i class="fa-solid fa-plus"></i> Nueva Tarea
+                </button>
+            </div>
         </div>
 
         <div class="kanban-board">

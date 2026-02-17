@@ -1,4 +1,4 @@
-// app.js
+// app.js - Gestor de Tareas Premium con Funcionalidades Avanzadas
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot, serverTimestamp, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -19,22 +19,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const tasksCollection = collection(db, "tasks");
-
-// Auth Provider
 const provider = new GoogleAuthProvider();
 
 // DOM Elements
 const loginScreen = document.getElementById('login-screen');
-const appContainer = document.querySelector('.app-container');
 const btnLogin = document.getElementById('btn-login');
 const btnLogout = document.getElementById('btn-logout');
 const userInfo = document.getElementById('user-info');
 const userAvatar = document.querySelector('.user-avatar');
 const userName = document.querySelector('.user-name');
-
 const modal = document.getElementById('task-modal');
 const taskForm = document.getElementById('task-form');
 const btnNewTask = document.getElementById('btn-new-task');
+const btnExport = document.getElementById('btn-export');
 const closeModal = document.querySelector('.close-modal');
 const closeModalBtn = document.querySelector('.close-modal-btn');
 const themeToggle = document.getElementById('theme-toggle');
@@ -45,95 +42,72 @@ let tasks = [];
 let isEditing = false;
 let currentTaskId = null;
 let currentUser = null;
-let unsubscribe = null; // To stop listener on logout
+let unsubscribe = null;
+let priorityChart = null;
+let weeklyChart = null;
 
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
-    // Auth Listener handles flow
+    initializeCharts();
 });
 
 // Auth Flow
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // Logged In
         currentUser = user;
         loginScreen.style.opacity = '0';
         setTimeout(() => loginScreen.style.display = 'none', 500);
 
-        // Show User Info
         userInfo.style.display = 'flex';
         userName.textContent = user.displayName;
         userAvatar.src = user.photoURL;
 
-        // Load tasks
         subscribeToTasks(user.uid);
     } else {
-        // Logged Out
         currentUser = null;
         loginScreen.style.display = 'flex';
         setTimeout(() => loginScreen.style.opacity = '1', 10);
 
         userInfo.style.display = 'none';
 
-        // Clear tasks
         if (unsubscribe) unsubscribe();
         renderTasks([]);
+        updateMetrics([]);
     }
 });
 
 function login() {
     signInWithPopup(auth, provider)
-        .then((result) => {
-            console.log("Logged in:", result.user.displayName);
-        }).catch((error) => {
-            console.error(error);
-            alert("Error al iniciar sesión: " + error.message);
-        });
+        .then((result) => console.log("Logged in:", result.user.displayName))
+        .catch((error) => alert("Error al iniciar sesión: " + error.message));
 }
 
 function logout() {
-    if (confirm("¿Cerrar sesión?")) {
-        signOut(auth);
-    }
+    if (confirm("¿Cerrar sesión?")) signOut(auth);
 }
 
 function setupEventListeners() {
-    // Auth
     btnLogin.addEventListener('click', login);
     btnLogout.addEventListener('click', logout);
-
-    // Modal controls
     btnNewTask.addEventListener('click', () => openModal());
+    btnExport.addEventListener('click', showExportMenu);
     closeModal.addEventListener('click', () => modal.style.display = 'none');
     closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
     window.addEventListener('click', (e) => {
         if (e.target === modal) modal.style.display = 'none';
     });
 
-    // Form Submit
     taskForm.addEventListener('submit', handleFormSubmit);
+    searchInput.addEventListener('input', (e) => renderFilteredTasks(e.target.value.toLowerCase()));
 
-    // Search
-    searchInput.addEventListener('input', (e) => {
-        const term = e.target.value.toLowerCase();
-        renderFilteredTasks(term);
-    });
-
-    // Theme Toggle
     themeToggle.addEventListener('click', () => {
         document.body.classList.toggle('light-mode');
         const icon = themeToggle.querySelector('i');
-        if (document.body.classList.contains('light-mode')) {
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-        } else {
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
-        }
+        icon.classList.toggle('fa-moon');
+        icon.classList.toggle('fa-sun');
     });
 
-    // Global Functions
     window.editTask = (id) => {
         const task = tasks.find(t => t.id === id);
         if (task) openModal(task);
@@ -145,7 +119,6 @@ function setupEventListeners() {
             await deleteDoc(doc(db, "tasks", id));
         } catch (err) {
             console.error('Error deleting task:', err);
-            alert('Error al eliminar: ' + err.message);
         }
     };
 }
@@ -154,9 +127,6 @@ function setupEventListeners() {
 function subscribeToTasks(userId) {
     if (unsubscribe) unsubscribe();
 
-    // Query: Tasks created by THIS user, ordered by date
-    // Note: This requires a Compound Query Index in Firestore (userId + created_at)
-    // If it fails initially, we'll strip the orderBy temporary or guide user to create index
     const q = query(
         tasksCollection,
         where("userId", "==", userId),
@@ -169,15 +139,11 @@ function subscribeToTasks(userId) {
             ...doc.data()
         }));
         renderTasks(tasks);
+        updateMetrics(tasks);
+        updateCharts(tasks);
+        initializeDragAndDrop();
     }, (error) => {
         console.error("Error getting tasks: ", error);
-        if (error.code === 'failed-precondition') {
-            // Index missing error - typical in Firebase
-            console.warn("Index needed. Providing link.");
-            alert("Para ordenar las tareas, Firebase necesita crear un 'Índice'. Abre la consola (F12) para ver el enlace de creación.");
-        } else if (error.code === 'permission-denied') {
-            alert('Error de Permisos: Revisa las reglas de seguridad.');
-        }
     });
 }
 
@@ -194,13 +160,11 @@ function renderFilteredTasks(term) {
 }
 
 function renderTasks(tasksToRender) {
-    // Clear columns
     ['pendiente', 'en_progreso', 'completado'].forEach(status => {
         const list = document.getElementById(`list-${status}`);
         const count = document.querySelector(`#col-${status} .count`);
         if (list) {
             list.innerHTML = '';
-            // Filter tasks for this column
             const columnTasks = tasksToRender.filter(t => t.status === status);
             if (count) count.textContent = columnTasks.length;
 
@@ -215,7 +179,7 @@ function renderTasks(tasksToRender) {
 function createTaskCard(task) {
     const div = document.createElement('div');
     div.className = 'task-card';
-    div.draggable = true;
+    div.dataset.id = task.id;
 
     const dateStr = task.due_date ? new Date(task.due_date).toLocaleDateString() : '';
 
@@ -237,6 +201,194 @@ function createTaskCard(task) {
     return div;
 }
 
+// ========== DRAG & DROP ==========
+function initializeDragAndDrop() {
+    ['pendiente', 'en_progreso', 'completado'].forEach(status => {
+        const list = document.getElementById(`list-${status}`);
+        if (list && !list.sortableInstance) {
+            list.sortableInstance = Sortable.create(list, {
+                group: 'tasks',
+                animation: 200,
+                ghostClass: 'task-ghost',
+                dragClass: 'task-dragging',
+                onEnd: async (evt) => {
+                    const taskId = evt.item.dataset.id;
+                    const newStatus = evt.to.id.replace('list-', '');
+
+                    try {
+                        await updateDoc(doc(db, "tasks", taskId), {
+                            status: newStatus
+                        });
+                    } catch (err) {
+                        console.error('Error updating task status:', err);
+                    }
+                }
+            });
+        }
+    });
+}
+
+// ========== DASHBOARD METRICS ==========
+function updateMetrics(tasksData) {
+    const pending = tasksData.filter(t => t.status === 'pendiente').length;
+    const progress = tasksData.filter(t => t.status === 'en_progreso').length;
+    const completed = tasksData.filter(t => t.status === 'completado').length;
+    const total = tasksData.length;
+    const productivity = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+    document.getElementById('metric-pending').textContent = pending;
+    document.getElementById('metric-progress').textContent = progress;
+    document.getElementById('metric-completed').textContent = completed;
+    document.getElementById('metric-productivity').textContent = productivity + '%';
+}
+
+// ========== CHARTS ==========
+function initializeCharts() {
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                labels: { color: '#f8fafc' }
+            }
+        }
+    };
+
+    // Priority Chart (Doughnut)
+    const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+    priorityChart = new Chart(priorityCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Alta', 'Media', 'Baja'],
+            datasets: [{
+                data: [0, 0, 0],
+                backgroundColor: ['#ef4444', '#f59e0b', '#10b981'],
+                borderColor: '#0f172a',
+                borderWidth: 2
+            }]
+        },
+        options: chartOptions
+    });
+
+    // Weekly Chart (Line)
+    const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+    weeklyChart = new Chart(weeklyCtx, {
+        type: 'line',
+        data: {
+            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            datasets: [{
+                label: 'Tareas Completadas',
+                data: [0, 0, 0, 0, 0, 0, 0],
+                borderColor: '#c5a059',
+                backgroundColor: 'rgba(197, 160, 89, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            ...chartOptions,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                },
+                x: {
+                    ticks: { color: '#94a3b8' },
+                    grid: { color: 'rgba(255,255,255,0.1)' }
+                }
+            }
+        }
+    });
+}
+
+function updateCharts(tasksData) {
+    // Update Priority Chart
+    const alta = tasksData.filter(t => t.priority === 'alta').length;
+    const media = tasksData.filter(t => t.priority === 'media').length;
+    const baja = tasksData.filter(t => t.priority === 'baja').length;
+
+    priorityChart.data.datasets[0].data = [alta, media, baja];
+    priorityChart.update();
+
+    // Update Weekly Chart (mock data for now - can be enhanced with real date tracking)
+    const completedTasks = tasksData.filter(t => t.status === 'completado');
+    const weeklyData = [0, 0, 0, 0, 0, 0, 0];
+
+    completedTasks.forEach(task => {
+        if (task.created_at && task.created_at.toDate) {
+            const day = task.created_at.toDate().getDay();
+            weeklyData[day === 0 ? 6 : day - 1]++;
+        }
+    });
+
+    weeklyChart.data.datasets[0].data = weeklyData;
+    weeklyChart.update();
+}
+
+// ========== EXPORT FUNCTIONALITY ==========
+function showExportMenu() {
+    const menu = confirm("¿Exportar a PDF? (Aceptar = PDF, Cancelar = Excel)");
+    if (menu) {
+        exportToPDF();
+    } else {
+        exportToExcel();
+    }
+}
+
+function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFontSize(20);
+    doc.setTextColor(197, 160, 89);
+    doc.text('Gestor de Tareas - Reporte', 14, 20);
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Generado: ${new Date().toLocaleDateString()}`, 14, 28);
+    doc.text(`Usuario: ${currentUser.displayName}`, 14, 33);
+
+    // Table
+    const tableData = tasks.map(t => [
+        t.title,
+        t.priority,
+        t.status.replace('_', ' '),
+        t.due_date || 'Sin fecha',
+        (t.description || '').substring(0, 50)
+    ]);
+
+    doc.autoTable({
+        startY: 40,
+        head: [['Tarea', 'Prioridad', 'Estado', 'Fecha', 'Descripción']],
+        body: tableData,
+        theme: 'grid',
+        headStyles: { fillColor: [197, 160, 89] },
+        styles: { fontSize: 9 }
+    });
+
+    doc.save(`tareas_${new Date().toISOString().split('T')[0]}.pdf`);
+}
+
+function exportToExcel() {
+    const data = tasks.map(t => ({
+        'Título': t.title,
+        'Descripción': t.description || '',
+        'Prioridad': t.priority,
+        'Estado': t.status.replace('_', ' '),
+        'Fecha Límite': t.due_date || '',
+        'Creada': t.created_at ? new Date(t.created_at.toDate()).toLocaleDateString() : ''
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Tareas");
+
+    XLSX.writeFile(wb, `tareas_${new Date().toISOString().split('T')[0]}.xlsx`);
+}
+
+// ========== MODAL & FORM ==========
 function openModal(task = null) {
     modal.style.display = 'flex';
     isEditing = !!task;
@@ -271,13 +423,12 @@ async function handleFormSubmit(e) {
         priority: document.getElementById('input-priority').value,
         status: document.getElementById('input-status').value,
         due_date: document.getElementById('input-date').value,
-        userId: currentUser.uid // IMPORTANT: Link task to user
+        userId: currentUser.uid
     };
 
     try {
         if (isEditing) {
-            const taskRef = doc(db, "tasks", currentTaskId);
-            await updateDoc(taskRef, taskData);
+            await updateDoc(doc(db, "tasks", currentTaskId), taskData);
         } else {
             taskData.created_at = serverTimestamp();
             await addDoc(tasksCollection, taskData);
