@@ -36,6 +36,9 @@ const closeModal = document.querySelector('.close-modal');
 const closeModalBtn = document.querySelector('.close-modal-btn');
 const themeToggle = document.getElementById('theme-toggle');
 const searchInput = document.getElementById('searchInput');
+const filterMonth = document.getElementById('filter-month');
+const filterYear = document.getElementById('filter-year');
+const btnClearFilters = document.getElementById('btn-clear-filters');
 
 // State
 let tasks = [];
@@ -45,6 +48,11 @@ let currentUser = null;
 let unsubscribe = null;
 let priorityChart = null;
 let weeklyChart = null;
+let currentFilters = {
+    search: '',
+    month: '',
+    year: ''
+};
 
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
@@ -99,7 +107,28 @@ function setupEventListeners() {
     });
 
     taskForm.addEventListener('submit', handleFormSubmit);
-    searchInput.addEventListener('input', (e) => renderFilteredTasks(e.target.value.toLowerCase()));
+    searchInput.addEventListener('input', (e) => {
+        currentFilters.search = e.target.value.toLowerCase();
+        applyFilters();
+    });
+
+    filterMonth.addEventListener('change', (e) => {
+        currentFilters.month = e.target.value;
+        applyFilters();
+    });
+
+    filterYear.addEventListener('change', (e) => {
+        currentFilters.year = e.target.value;
+        applyFilters();
+    });
+
+    btnClearFilters.addEventListener('click', () => {
+        currentFilters = { search: '', month: '', year: '' };
+        searchInput.value = '';
+        filterMonth.value = '';
+        filterYear.value = '';
+        applyFilters();
+    });
 
     themeToggle.addEventListener('click', () => {
         document.body.classList.toggle('light-mode');
