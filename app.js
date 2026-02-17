@@ -173,6 +173,7 @@ function subscribeToTasks(userId) {
             id: doc.id,
             ...doc.data()
         }));
+        window.tasks = tasks; // Make tasks globally accessible
         populateYearFilter();
         applyFilters();
         updateMetrics(tasks);
