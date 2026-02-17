@@ -81,11 +81,19 @@ window.sendEmailNotification = async function () {
             'completado': 'Completado'
         }[task.status] || 'Pendiente';
 
+        // Generate tags HTML
+        const tagsHtml = (task.tags && task.tags.length > 0)
+            ? `<div style="margin-top: 0.5rem;">${task.tags.map(tag =>
+                `<span style="background: #c5a059; color: white; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.75rem; margin-right: 0.3rem;">${tag}</span>`
+            ).join('')}</div>`
+            : '';
+
         return `
             <tr>
                 <td>
                     <div class="task-title">${task.title}</div>
                     ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
+                    ${tagsHtml}
                     ${task.due_date ? `<div class="task-date">📅 Vence: ${task.due_date}</div>` : ''}
                 </td>
                 <td>

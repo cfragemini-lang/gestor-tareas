@@ -293,6 +293,7 @@ function createTaskCard(task) {
         </div>
         <div class="task-title">${task.title}</div>
         <div class="task-desc">${task.description || ''}</div>
+        ${renderTaskTags(task.tags)}
         <div class="task-footer">
             <span>#${task.id.substr(0, 4)}</span>
             <div class="task-actions">
@@ -501,16 +502,17 @@ function exportToPDF() {
         t.priority,
         t.status.replace('_', ' '),
         t.due_date || 'Sin fecha',
-        (t.description || '').substring(0, 50)
+        (t.tags && t.tags.length > 0) ? t.tags.join(', ') : '-',
+        (t.description || '').substring(0, 40)
     ]);
 
     doc.autoTable({
         startY: 40,
-        head: [['Tarea', 'Prioridad', 'Estado', 'Fecha', 'Descripción']],
+        head: [['Tarea', 'Prioridad', 'Estado', 'Fecha', 'Tags', 'Descripción']],
         body: tableData,
         theme: 'grid',
         headStyles: { fillColor: [197, 160, 89] },
-        styles: { fontSize: 9 }
+        styles: { fontSize: 8 }
     });
 
     doc.save(`tareas_${new Date().toISOString().split('T')[0]}.pdf`);
@@ -523,6 +525,7 @@ function exportToExcel() {
         'Prioridad': t.priority,
         'Estado': t.status.replace('_', ' '),
         'Fecha Límite': t.due_date || '',
+        'Tags': (t.tags && t.tags.length > 0) ? t.tags.join(', ') : '-',
         'Creada': t.created_at ? new Date(t.created_at.toDate()).toLocaleDateString() : ''
     }));
 
@@ -547,10 +550,18 @@ function openModal(task = null) {
         document.getElementById('input-priority').value = task.priority;
         document.getElementById('input-status').value = task.status;
         document.getElementById('input-date').value = task.due_date || '';
+
+        // Load tags
+        currentTags = task.tags || [];
+        renderTagsChips();
     } else {
         taskForm.reset();
         document.getElementById('input-priority').value = 'media';
         document.getElementById('input-status').value = 'pendiente';
+
+        // Clear tags
+        currentTags = [];
+        renderTagsChips();
     }
 }
 
@@ -568,6 +579,7 @@ async function handleFormSubmit(e) {
         priority: document.getElementById('input-priority').value,
         status: document.getElementById('input-status').value,
         due_date: document.getElementById('input-date').value,
+        tags: currentTags, // Include tags
         userId: currentUser.uid
     };
 
