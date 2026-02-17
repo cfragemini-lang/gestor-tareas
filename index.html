@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Tareas Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="app-container">
+        <header class="app-header">
+            <h1><i class="fa-solid fa-layer-group"></i> TaskMaster</h1>
+            <button id="theme-toggle" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
+        </header>
+
+        <div class="toolbar">
+            <div class="search-bar">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar tareas...">
+            </div>
+            <button id="btn-new-task" class="btn-primary"><i class="fa-solid fa-plus"></i> Nueva Tarea</button>
+        </div>
+
+        <div class="kanban-board">
+            <!-- Column: Pendiente -->
+            <div class="kanban-column" id="col-pendiente">
+                <div class="column-header status-pendiente">
+                    <h2>Pendiente</h2>
+                    <span class="count">0</span>
+                </div>
+                <div class="task-list" id="list-pendiente">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </div>
+
+            <!-- Column: En Progreso -->
+            <div class="kanban-column" id="col-en_progreso">
+                <div class="column-header status-progreso">
+                    <h2>En Progreso</h2>
+                    <span class="count">0</span>
+                </div>
+                <div class="task-list" id="list-en_progreso">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </div>
+
+            <!-- Column: Completado -->
+            <div class="kanban-column" id="col-completado">
+                <div class="column-header status-completado">
+                    <h2>Completado</h2>
+                    <span class="count">0</span>
+                </div>
+                <div class="task-list" id="list-completado">
+                    <!-- Tasks will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for New/Edit Task -->
+    <div id="task-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close-modal">&times;</span>
+            <h2 id="modal-title">Nueva Tarea</h2>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+
+                <div class="form-group">
+                    <label>Título</label>
+                    <input type="text" id="input-title" required placeholder="Ej: Revisar presupuesto">
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="input-desc" rows="3" placeholder="Detalles de la tarea..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prioridad</label>
+                        <select id="input-priority">
+                            <option value="baja">Baja</option>
+                            <option value="media" selected>Media</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estado</label>
+                        <select id="input-status">
+                            <option value="pendiente">Pendiente</option>
+                            <option value="en_progreso">En Progreso</option>
+                            <option value="completado">Completado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha Límite</label>
+                    <input type="date" id="input-date">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary close-modal-btn">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>

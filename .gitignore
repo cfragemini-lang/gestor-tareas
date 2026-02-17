@@ -1,0 +1,16 @@
+
+# System files
+Thumbs.db
+Desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+
+# Dependencies
+vendor/
+node_modules/
+
+# Local database (if we don't want to track the data itself, but for this template maybe we do initially, let's ignore the actual data db if it gets large, but for now keep it simple)
+# *.sqlite
+# *.db
