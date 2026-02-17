@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="tags-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- SortableJS for Drag & Drop -->
@@ -216,6 +217,16 @@
                     <textarea id="input-desc" rows="3" placeholder="Detalles de la tarea..."></textarea>
                 </div>
 
+                <div class="form-group">
+                    <label>🏷️ Etiquetas (Tags)</label>
+                    <div class="tags-input-container">
+                        <div id="tags-chips" class="tags-chips"></div>
+                        <input type="text" id="input-tags" placeholder="Escribe y presiona Enter..." class="tags-input">
+                    </div>
+                    <small style="color: #94a3b8; font-size: 0.85rem;">Presiona Enter para agregar. Máximo 5
+                        tags.</small>
+                </div>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label>Prioridad</label>
@@ -308,6 +319,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Tags Functions -->
+    <script src="tags-functions.js"></script>
 
     <!-- Email Functions -->
     <script src="email-functions.js"></script>

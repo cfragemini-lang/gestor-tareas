@@ -63,6 +63,7 @@ window.userName = userName;
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     initializeCharts();
+    initTagsSystem(); // Initialize tags system
 });
 
 // Auth Flow

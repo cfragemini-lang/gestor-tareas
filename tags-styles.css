@@ -1,0 +1,205 @@
+/* ========== TAGS SYSTEM ========== */
+
+.tags-input-container {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    min-height: 44px;
+}
+
+.tags-input-container:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1);
+}
+
+.tags-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag-chip {
+    background: linear-gradient(135deg, var(--tag-color, #c5a059), var(--tag-color-dark, #b08d47));
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: tagFadeIn 0.2s ease;
+}
+
+@keyframes tagFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.tag-chip-remove {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+}
+
+.tag-chip-remove:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.tags-input {
+    flex: 1;
+    min-width: 120px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.tags-input::placeholder {
+    color: #64748b;
+}
+
+/* Tag colors - Auto-generated based on tag name */
+.tag-chip[data-tag-color="1"] {
+    --tag-color: #ef4444;
+    --tag-color-dark: #dc2626;
+}
+
+.tag-chip[data-tag-color="2"] {
+    --tag-color: #f59e0b;
+    --tag-color-dark: #d97706;
+}
+
+.tag-chip[data-tag-color="3"] {
+    --tag-color: #10b981;
+    --tag-color-dark: #059669;
+}
+
+.tag-chip[data-tag-color="4"] {
+    --tag-color: #3b82f6;
+    --tag-color-dark: #2563eb;
+}
+
+.tag-chip[data-tag-color="5"] {
+    --tag-color: #8b5cf6;
+    --tag-color-dark: #7c3aed;
+}
+
+.tag-chip[data-tag-color="6"] {
+    --tag-color: #ec4899;
+    --tag-color-dark: #db2777;
+}
+
+.tag-chip[data-tag-color="7"] {
+    --tag-color: #14b8a6;
+    --tag-color-dark: #0d9488;
+}
+
+.tag-chip[data-tag-color="8"] {
+    --tag-color: #f97316;
+    --tag-color-dark: #ea580c;
+}
+
+/* Tags in task cards */
+.task-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+}
+
+.task-tag-badge {
+    background: linear-gradient(135deg, var(--tag-color, #c5a059), var(--tag-color-dark, #b08d47));
+    color: white;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Tags filter in toolbar */
+.tags-filter-dropdown {
+    position: relative;
+}
+
+.tags-filter-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.tags-filter-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary-color);
+}
+
+.tags-filter-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 0.5rem;
+    min-width: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.tags-filter-menu.active {
+    display: block;
+}
+
+.tag-filter-option {
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.tag-filter-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.tag-filter-option input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
