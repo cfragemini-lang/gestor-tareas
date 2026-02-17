@@ -59,6 +59,31 @@ let currentFilters = {
 window.tasks = tasks;
 window.userName = userName;
 
+// ========== UTILITY FUNCTIONS ==========
+// Convert text to Title Case (Primera Letra Mayúscula)
+function toTitleCase(str) {
+    if (!str) return str;
+
+    // Palabras que deben permanecer en minúsculas (excepto al inicio)
+    const minusculas = ['de', 'del', 'la', 'el', 'los', 'las', 'un', 'una', 'y', 'o', 'en', 'a', 'con', 'por', 'para'];
+
+    return str.toLowerCase()
+        .split(' ')
+        .map((palabra, index) => {
+            // Primera palabra siempre con mayúscula
+            if (index === 0) {
+                return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+            }
+            // Palabras pequeñas en minúscula
+            if (minusculas.includes(palabra)) {
+                return palabra;
+            }
+            // Resto con mayúscula inicial
+            return palabra.charAt(0).toUpperCase() + palabra.slice(1);
+        })
+        .join(' ');
+}
+
 // Initial Load
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
@@ -642,7 +667,7 @@ async function handleFormSubmit(e) {
     }
 
     const taskData = {
-        title: document.getElementById('input-title').value,
+        title: toTitleCase(document.getElementById('input-title').value),
         description: document.getElementById('input-desc').value,
         priority: document.getElementById('input-priority').value,
         status: document.getElementById('input-status').value,
