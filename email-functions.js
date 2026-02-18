@@ -24,7 +24,7 @@ window.openEmailModal = function () {
     // Show preview
     const preview = document.getElementById('selected-tasks-preview');
     preview.innerHTML = `
-        <p style="color: #c5a059; font-weight: 600; margin-bottom: 0.5rem;">
+        <p style="color: #2d5cf7; font-weight: 600; margin-bottom: 0.5rem;">
             ${pendingTasks.length} tarea(s) pendiente(s):
         </p>
         ${pendingTasks.slice(0, 5).map(t => `
@@ -84,7 +84,7 @@ window.sendEmailNotification = async function () {
         // Generate tags HTML
         const tagsHtml = (task.tags && task.tags.length > 0)
             ? `<div style="margin-top: 0.5rem;">${task.tags.map(tag =>
-                `<span style="background: #c5a059; color: white; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.75rem; margin-right: 0.3rem;">${tag}</span>`
+                `<span style="background: #2d5cf7; color: white; padding: 0.2rem 0.5rem; border-radius: 10px; font-size: 0.75rem; margin-right: 0.3rem;">${tag}</span>`
             ).join('')}</div>`
             : '';
 
