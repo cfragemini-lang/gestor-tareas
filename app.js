@@ -425,7 +425,7 @@ function initializeCharts() {
         maintainAspectRatio: true,
         plugins: {
             legend: {
-                labels: { color: '#f8fafc' }
+                labels: { color: '#0f172a' }
             }
         }
     };
@@ -455,8 +455,8 @@ function initializeCharts() {
             datasets: [{
                 label: 'Tareas Completadas',
                 data: [0, 0, 0, 0, 0, 0, 0],
-                borderColor: '#c5a059',
-                backgroundColor: 'rgba(197, 160, 89, 0.1)',
+                borderColor: '#2d5cf7',
+                backgroundColor: 'rgba(45, 92, 247, 0.1)',
                 tension: 0.4,
                 fill: true
             }]
@@ -466,12 +466,12 @@ function initializeCharts() {
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: 'rgba(255,255,255,0.1)' }
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
                 },
                 x: {
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: 'rgba(255,255,255,0.1)' }
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
                 }
             }
         }
@@ -486,8 +486,8 @@ function initializeCharts() {
             datasets: [{
                 label: 'Tareas por Tag',
                 data: [],
-                backgroundColor: '#c5a059',
-                borderColor: '#b08d47',
+                backgroundColor: '#2d5cf7',
+                borderColor: '#1e4bd8',
                 borderWidth: 1
             }]
         },
@@ -496,12 +496,12 @@ function initializeCharts() {
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: { color: '#94a3b8', stepSize: 1 },
-                    grid: { color: 'rgba(255,255,255,0.1)' }
+                    ticks: { color: '#64748b', stepSize: 1 },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
                 },
                 x: {
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: 'rgba(255,255,255,0.1)' }
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
                 }
             }
         }

@@ -1,17 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --primary-color: #c5a059;
-    --primary-hover: #b08d4a;
-    --bg-color: #0f172a;
-    --text-color: #f8fafc;
-    --text-muted: #94a3b8;
-    --glass-bg: rgba(30, 41, 59, 0.6);
-    --glass-border: rgba(197, 160, 89, 0.2);
-    --card-bg: rgba(51, 65, 85, 0.4);
+    --primary-color: #2d5cf7;
+    --primary-hover: #1e4bd8;
+    --bg-color: #f8fafc;
+    --text-color: #0f172a;
+    --text-muted: #64748b;
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(45, 92, 247, 0.15);
+    --card-bg: #ffffff;
+    --card-shadow: 0 10px 25px -5px rgba(45, 92, 247, 0.08), 0 8px 10px -6px rgba(45, 92, 247, 0.05);
 
     --status-todo: #f59e0b;
-    --status-progress: #6366f1;
+    --status-progress: #2d5cf7;
     --status-done: #10b981;
 }
 
@@ -55,22 +56,25 @@ body {
     background: var(--primary-color);
     top: -100px;
     left: -150px;
+    opacity: 0.1;
 }
 
 .blob-2 {
     width: 350px;
     height: 350px;
-    background: #1e293b;
+    background: #e2e8f0;
     bottom: -50px;
     right: -50px;
+    opacity: 0.5;
 }
 
 .blob-3 {
     width: 400px;
     height: 400px;
-    background: var(--status-progress);
+    background: var(--primary-color);
     top: 40%;
     left: 50%;
+    opacity: 0.05;
 }
 
 @keyframes float {
@@ -624,7 +628,7 @@ select:focus {
     font-family: 'Playfair Display', serif;
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #f8fafc 0%, #c5a059 100%);
+    background: linear-gradient(135deg, var(--text-color) 0%, var(--primary-color) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

@@ -16,12 +16,12 @@
 
 .checkbox-label span {
     font-weight: 500;
-    color: #c5a059;
+    color: var(--primary-color);
 }
 
 .recurring-config {
-    background: rgba(197, 160, 89, 0.05);
-    border: 1px solid rgba(197, 160, 89, 0.2);
+    background: rgba(45, 92, 247, 0.05);
+    border: 1px solid rgba(45, 92, 247, 0.1);
     border-radius: 8px;
     padding: 1rem;
     margin-top: 1rem;
@@ -63,7 +63,7 @@
 }
 
 .weekdays-selector label:hover {
-    background: rgba(197, 160, 89, 0.1);
+    background: rgba(45, 92, 247, 0.1);
     border-color: var(--primary-color);
 }
 
@@ -76,7 +76,7 @@
 .weekdays-selector label:has(input:checked) {
     background: var(--primary-color);
     border-color: var(--primary-color);
-    color: #0f172a;
+    color: white;
     font-weight: 600;
 }
 
